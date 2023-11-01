@@ -21,4 +21,4 @@ R, Quarto, Git, Python, Machine Learning
 
 # Hobbies
 
-Doing Data Analytics Assignments
+Doing Data Analytics Assignments a
