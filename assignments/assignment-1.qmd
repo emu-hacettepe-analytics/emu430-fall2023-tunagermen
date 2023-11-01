@@ -4,12 +4,56 @@ title: "Assignment 1"
 
 # Assignment 1
 
-```{r}
-1 + 1
-```
-
-My first assignment has two parts.
+My first assignment has four parts.
 
 ## (a)
 
+I have watched this [**video**](https://www.youtube.com/watch?v=t8qtcDyCRFA&list=PL9HYL-VRX0oTOK4cpbCbRk15K2roEgzVW&index=13). In this video, a man shows that how to create a blog from scratch and publish it into the web on Quarto Pub using Quarto.
+
 ## (b)
+
+-   First difference I want to talk about is data structures. While lists, dictionaries, tuples are more primary in Python, vectors, matrices and dataframes are at the primary in R.
+
+-   Second difference is indexing. In Python indexing starts with 0 but in R indexing starts with 1.
+
+    ```{python}
+    vector = [0,1,2]
+    vector[0]
+    ```
+
+    ```{r}
+    vector_ <- c(0,1,2)
+    vector_[1]
+    ```
+
+-   Third difference is assignment operator. In R, we can use "\<-" but in Python we have to use "="
+
+```{r}
+a <- 10
+a
+```
+
+```{python}
+a <- 10
+a
+```
+
+## (c)
+
+```{r}
+library(dslabs)
+
+
+data <- na_example
+data
+
+sum(is.na(data))
+
+```
+
+```{r}
+data_0 <- data
+data_0[is.na(data)] <- 0
+data_0
+sum(is.na(data_0))
+```

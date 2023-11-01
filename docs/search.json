@@ -4,7 +4,7 @@
     "href": "project.html",
     "title": "Our Course Project",
     "section": "",
-    "text": "I’m honored to be a member of the [group name] project team.\nBelow, you’ll find a brief summary of our project. To access a detailed project description, please go to https://[your-project-url].\nSummary\n[provide a biref summary of your project]\n\n\n\n Back to top"
+    "text": "I’m honored to be a member of the [group name] project team.\nBelow, you’ll find a brief summary of our project. To access a detailed project description, please go to https://[your-project-url].\nSummary\n[provide a brief summary of your project]\n\n\n\n Back to top"
   },
   {
     "objectID": "index.html",
@@ -28,13 +28,6 @@
     "text": "B.S., Industrial Engineering, Hacettepe University, Turkey, 2019 - Ongoing."
   },
   {
-    "objectID": "about.html#employements",
-    "href": "about.html#employements",
-    "title": "About Me",
-    "section": "Employements",
-    "text": "Employements\n\nFirm xxx, position xx, year xxx\nFirm yyy, position yyy, year yyy"
-  },
-  {
     "objectID": "about.html#internships",
     "href": "about.html#internships",
     "title": "About Me",
@@ -46,7 +39,7 @@
     "href": "assignments/assignment-1.html",
     "title": "Assignment 1",
     "section": "",
-    "text": "1 + 1\n\n[1] 2\n\n\nMy first assignment has two parts."
+    "text": "1 + 1\n\n[1] 2\n\n\n\nMy first assignment has four parts."
   },
   {
     "objectID": "assignments.html",
