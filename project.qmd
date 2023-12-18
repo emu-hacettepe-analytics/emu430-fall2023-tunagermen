@@ -5,7 +5,7 @@ sidebar: false
 
 I'm honored to be a member of the Germen Obasi project team.
 
-Below, you'll find a brief summary of our project. To access a detailed project description, please go to [github page of Germen Obasi](https://github.com/orgs/emu-hacettepe-analytics/teams/germen_obasi){.uri}.
+Below, you'll find a brief summary of our project. To access a detailed project description, please go to [our site](https://emu-hacettepe-analytics.github.io/emu430-fall2023-team-germen_obasi/){.uri}.
 
 **Summary**
 
