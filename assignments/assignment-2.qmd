@@ -1,9 +1,173 @@
 ---
 title: "Assignment 2"
+code-fold: true
 ---
 
 # Assignment 2
 
+## PART 2
+
+first_url_df \<- url_to_df(urls\[1\])
+
 ```{r}
-1 + 1
+library(tidyverse) # for everything :)
+library(rvest) # for HTML scraping
+library(stringr) # for string processing
+
+urls <- c("https://m.imdb.com/search/title/?title_type=feature&release_date=2010-01-01,2023-12-31&num_votes=2500,&country_of_origin=TR&count=250", "https://m.imdb.com/search/title/?title_type=feature&release_date=,2009-12-31&num_votes=2500,&country_of_origin=TR&count=250")
+
+my_period_to_seconds <- function(period_){
+  
+  period_ <- ifelse(str_detect(period_,"h"),(str_replace_all(period_,"h","")),period_)
+  period_ <- ifelse(str_detect(period_,"m"),(str_replace_all(period_,"m","")),period_)
+  print(period_)
+  hours_seconds <- unlist(str_split(period_, " ", n = 2))
+  print(hours_seconds)
+  
+  if(hours_seconds[1] < 4){
+    seconds <- 60 * as.integer(hours_seconds[1]) + ifelse(is.na(hours_seconds[2]),0,as.integer(hours_seconds[2]))
+  }else {
+    
+    seconds = as.double(hours_seconds[1])
+    
+  }
+  return((seconds))  
+}
+  
+url_to_df <- function(url)
+  {
+  
+  data_html <- read_html(url)
+  title_names <- data_html |> html_nodes('a h3')
+  title_names <- html_text(title_names)
+  title_names <- str_split(title_names, " ", n=2)
+  title_names <- unlist(lapply(title_names, function(x) {x[2]}))
+  title_names_df <- data.frame(title_names)
+    
+    
+  years <- data_html |> html_nodes(".sc-43986a27-8.jHYIIK.dli-title-metadata-item:nth-child(1)")
+  years <- html_text(years)
+  print(years)
+  years_df <- data.frame(as.integer(years))
+  
+  durations <- data_html |> html_nodes(".sc-43986a27-8.jHYIIK.dli-title-metadata-item:nth-child(2)")
+  durations <- html_text(durations)
+  print(durations)
+  print(durations[199])
+  
+  durations_minutes <- lapply(durations, my_period_to_seconds)
+  print(durations_minutes)
+  durations_df = data.frame(as.integer(durations_minutes))
+  
+  rating_with_votes <- data_html |> html_nodes(".sc-9ab53865-1.iXEijC.ratingGroup--imdb-rating")
+  rating_with_votes <- html_text(rating_with_votes)
+  rating_split <- strsplit(rating_with_votes, "")
+  rating_split <- lapply(rating_split, function(x) {x[1:3]})
+  rating <- lapply(rating_split, function(x) {paste(x[1],x[2],x[3], sep = "")} )
+  rating <- as.numeric(rating)
+  rating_df <- data.frame(rating)
+  
+  votes = data_html |> html_nodes(".sc-53c98e73-0.kRnqtn")
+  votes <- html_text(votes)
+  votes_only_nums <- votes |> str_replace_all("Votes", "")
+  votes_numerical <- parse_number(votes_only_nums, locale = locale(grouping_mark = ","))
+  print(votes_numerical)
+  votes_df <- data.frame(votes_numerical)
+  
+  return(bind_cols(title_names_df, years_df, durations_df, rating_df, votes_df))
+}
+
+
+
+first_url_df <- url_to_df(urls[1])
+second_url_df <- url_to_df(urls[2])
+
+final_df <- bind_rows(first_url_df, second_url_df)
+col_names <- c("Title", "Year", "Duration", "Rating", "Votes")
+colnames(final_df) <- col_names
 ```
+
+## PART 3
+
+### a)
+
+```{r}
+order_rating <- final_df |> arrange(desc(Rating))
+
+print(head(order_rating, 5))
+print(tail(order_rating, 5))
+```
+
+I wasn't surprised by the placement of the first 5 movies, but I didn't expect the last movie to be that bottom.
+
+### b)
+
+```{r}
+my_fav_movies <- c("Recep Ivedik", "Recep Ivedik 2", "Recep Ivedik 3")
+my_fav_movies_df <- final_df |> filter(Title %in% my_fav_movies)
+print(my_fav_movies_df$Rating)
+which(order_rating$Title %in% my_fav_movies)
+```
+
+### c)
+
+```{r}
+final_df |> group_by(Year) |> summarize(ratings_mean = mean(Rating)) |>
+  ggplot(aes(Year, ratings_mean)) + geom_point()
+
+
+final_df |> group_by(Year) |>
+  ggplot(aes(Year)) + geom_point(stat = "count")
+
+final_df |> ggplot(aes(x = as.factor(Year), y = Rating)) +
+  geom_boxplot() + theme(axis.text.x = element_text(angle = 90))
+```
+
+Unfortunately, the mean ratings of movies coming out of Turkey have decreased over the years, and the number of movies coming out of Turkey has increased. Box plot shows us that not only the average ratings of movies coming out of our country have decreased, and also the value of the lowest ratings over the years has decreased.
+
+### d)
+
+```{r}
+final_df |> ggplot(aes(Votes, Rating)) + geom_line(color = "blue") + scale_x_log10()
+
+```
+
+Looking at this graph, I don't see a correlation between Votes and Rating.
+
+### e)
+
+```{r}
+final_df |> ggplot(aes(Duration, Rating)) + geom_line(color = "purple")
+
+```
+
+Looking at this graph, I don't see a correlation between Duration and Rating.
+
+## PART 4
+
+```{r}
+data_html <- read_html("https://m.imdb.com/search/title/?groups=top_1000&country_of_origin=TR")
+title_names <- data_html |> html_nodes('a h3')
+title_names <- html_text(title_names)
+title_names <- str_split(title_names, " ", n=2)
+title_names <- unlist(lapply(title_names, function(x) {x[2]}))
+title_names_df <- data.frame(title_names)
+
+years <- data_html |> html_nodes(".sc-43986a27-8.jHYIIK.dli-title-metadata-item:nth-child(1)")
+years <- html_text(years)
+print(years)
+years_df <- data.frame(as.integer(years))
+new_df <- bind_cols(title_names_df, years_df)
+col_names <- c("Title", "Year")
+colnames(new_df) <- col_names
+
+new_data_join <- inner_join(new_df, final_df, c("Title","Year"), keep = FALSE)
+print(new_data_join)
+```
+
+```{r}
+print(head((final_df |> arrange(desc(Rating))), 11))
+print(head((new_data_join |> arrange(desc(Rating))), 11))
+```
+
+As we see in the tables, the order is different. At first I thought that there was an arrangement based on a certain limit of votes, but this does not seem to be the case. Looking at these tables, I can say that there is a possibility that IMDB run an algorithm which takes years into consideration.
